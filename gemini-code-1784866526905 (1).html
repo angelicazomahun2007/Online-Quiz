@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantitative Methods - Interactive Quiz Ledger</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --correct: #16a34a;
+      --correct-bg: #f0fdf4;
+      --incorrect: #dc2626;
+      --incorrect-bg: #fef2f2;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 1.875rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+    }
+
+    /* Score Ledger Bar */
+    .ledger-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .ledger-card {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .ledger-card h3 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .ledger-card .score {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* Set Navigation Tabs */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .tab-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Quiz Area */
+    .quiz-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .question-number {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .question-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      padding: 14px 18px;
+      text-align: left;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background-color: #eff6ff;
+    }
+
+    .option-btn.selected-correct {
+      background-color: var(--correct-bg);
+      border-color: var(--correct);
+      color: var(--correct);
+      font-weight: 600;
+    }
+
+    .option-btn.selected-incorrect {
+      background-color: var(--incorrect-bg);
+      border-color: var(--incorrect);
+      color: var(--incorrect);
+      font-weight: 600;
+    }
+
+    .option-btn.show-correct {
+      border-color: var(--correct);
+      background-color: var(--correct-bg);
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background-color: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      display: none;
+    }
+
+    .explanation-box.active {
+      display: block;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 600px) {
+      .tabs {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Quantitative Methods Quiz Ledger</h1>
+    <p>Comprehensive assessment platform across 4 core module sets (80 questions)</p>
+  </header>
+
+  <!-- Ledger Summary Overview -->
+  <div class="ledger-summary">
+    <div class="ledger-card">
+      <h3>Overall Progress</h3>
+      <div class="score" id="total-progress">0 / 80</div>
+    </div>
+    <div class="ledger-card">
+      <h3>Overall Accuracy</h3>
+      <div class="score" id="overall-accuracy">0%</div>
+    </div>
+    <div class="ledger-card">
+      <h3>Current Set Score</h3>
+      <div class="score" id="current-set-score">0 / 20</div>
+    </div>
+  </div>
+
+  <!-- Tabs for 4 Sets -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchSet(0)">Set 1: Time Series & Indexing</button>
+    <button class="tab-btn" onclick="switchSet(1)">Set 2: Forecasting Methods</button>
+    <button class="tab-btn" onclick="switchSet(2)">Set 3: Regression & Price Indexes</button>
+    <button class="tab-btn" onclick="switchSet(3)">Set 4: Econometric Models</button>
+  </div>
+
+  <!-- Quiz Card Area -->
+  <div class="quiz-card">
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="question-header">
+      <span class="question-number" id="question-number">Question 1 of 20</span>
+      <span id="set-title-badge" style="font-size: 0.85rem; color: var(--text-muted);">Set 1</span>
+    </div>
+
+    <div class="question-text" id="question-text">Loading question...</div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div class="explanation-box" id="explanation-box">
+      <strong>Explanation / Solution:</strong>
+      <p id="explanation-text"></p>
+    </div>
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="controls">
+    <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+    <button class="btn btn-secondary" onclick="resetCurrentSet()">Reset Set</button>
+    <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+</div>
+
+<script>
+// Quiz Master Dataset (80 Questions total across 4 Sets)
+const quizData = [
+  // SET 1
+  {
+    setTitle: "Set 1: Time Series & Indexing",
+    questions: [
+      {
+        question: "The correlation is a measure to determine the degree and _____ of relationship.",
+        options: ["strength", "direction", "change", "association"],
+        correct: 1,
+        explanation: "Correlation evaluates both the strength and the direction (positive or negative) of a linear relationship."
+      },
+      {
+        question: "Which component of a time series deals with unforeseen circumstances of events within a particular period?",
+        options: ["Cyclical", "Secular", "Random Variation", "Seasonal"],
+        correct: 2,
+        explanation: "Random (or irregular) variation accounts for unpredictable events such as floods, strikes, or sudden market shifts."
+      },
+      {
+        question: "What is the relationship between X and Y with a coefficient of 0.7342?",
+        options: ["Positive correlation", "Relative correlation", "Direct correlation", "Inverse relationship"],
+        correct: 0,
+        explanation: "A positive correlation coefficient indicates that both variables increase or decrease together."
+      },
+      {
+        question: "The procedure for identifying trends and seasonal adjustments can be combined to yield seasonally adjusted forecasts.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "Trend identification combined with seasonal indexing yields robust seasonally adjusted forecasts."
+      },
+      {
+        question: "Which of the following is a limitation of the base period method of index number construction?",
+        options: [
+          "Changes in the relative importance of different items are not taken into account",
+          "Only price changes are reflected and not quantity changes",
+          "It is difficult to obtain data for the base period",
+          "Cannot be used to compare different time periods"
+        ],
+        correct: 0,
+        explanation: "Over time, consumer habits shift; base period weighting fails to capture these relative changes."
+      },
+      {
+        question: "The base year in an index number is the year",
+        options: ["in which the index is being calculated", "used as a standard for comparison", "with the highest value", "with the lowest value"],
+        correct: 1,
+        explanation: "The base year serves as a benchmark standard (set to 100) against which future movements are evaluated."
+      },
+      {
+        question: "How does inflation affect purchasing power? Inflation _____ purchasing power.",
+        options: ["has no impact on", "increases", "decreases", "stabilizes"],
+        correct: 2,
+        explanation: "Rising price levels (inflation) erode the real purchasing power of a currency unit."
+      },
+      {
+        question: "Which component of a time series represents the underlying, persistent upward or downward movement over time?",
+        options: ["Seasonal", "Irregular", "Trend", "Cyclical"],
+        correct: 2,
+        explanation: "The secular trend component captures long-term directional trajectory over extended periods."
+      },
+      {
+        question: "The primary purpose of using time series models in forecasting is to",
+        options: ["analyse cross-sectional data", "understand the relationship between variables", "make predictions about future data points based on historical patterns", "perform hypothesis testing"],
+        correct: 2,
+        explanation: "Time series models leverage historical sequential patterns to extrapolate future data values."
+      },
+      {
+        question: "Which mathematical formula is commonly used to calculate a weighted aggregate index number?",
+        options: [
+          "Median = (Sum of all values) / (Number of values)",
+          "Index = (Value in current period / Value in base period) * 100",
+          "Average = (Sum of all values) / (Number of values)",
+          "Mode = Most frequently occurring value in a dataset"
+        ],
+        correct: 1,
+        explanation: "Index numbers express relative change as a percentage ratio comparing current period to base period."
+      },
+      {
+        question: "What is the other name for the consumer price index? The _____ index.",
+        options: ["retail price", "producer price", "deflation price", "real income"],
+        correct: 0,
+        explanation: "The Consumer Price Index (CPI) is widely known as the Retail Price Index in several accounting systems."
+      },
+      {
+        question: "What will be the future value for annual sales of a small shop if the code year t=10 in equation Y = 6.1 + 1.3t?",
+        options: ["29.1", "19.1", "39.1", "12.1"],
+        correct: 1,
+        explanation: "Calculation: Y = 6.1 + 1.3(10) = 6.1 + 13 = 19.1."
+      },
+      {
+        question: "What metric is used to measure the degree of the linear relationship between two variables?",
+        options: ["Regression", "Correlation determination", "Coefficient of determination", "Coefficient of correlation"],
+        correct: 3,
+        explanation: "Pearson's coefficient of correlation (r) measures linear direction and magnitude."
+      },
+      {
+        question: "Which component of a time series deals with patterns of change within a year?",
+        options: ["Cyclical variation", "Secular variation", "Random variation", "Seasonal variation"],
+        correct: 3,
+        explanation: "Seasonal variation repeats regularly within a single calendar year (e.g., quarterly or monthly)."
+      },
+      {
+        question: "What mathematical method is used to calculate values of alpha and beta in a linear regression equation?",
+        options: ["Line of best fit", "Ordinary least squares", "Straight line of regression", "Regression coefficient"],
+        correct: 1,
+        explanation: "Ordinary Least Squares (OLS) minimizes the sum of squared residuals to estimate intercept (alpha) and slope (beta)."
+      },
+      {
+        question: "How will you interpret the correlation coefficient r = 0.9837?",
+        options: ["Very strong", "Strong", "Mild strong", "Averagely strong"],
+        correct: 0,
+        explanation: "Values close to +1.0 (above 0.90) reflect a very strong positive correlation."
+      },
+      {
+        question: "Which of the following components is typically NOT considered in standard time series forecasting?",
+        options: ["Trend", "Seasonality", "Cyclical patterns", "Spatial variations"],
+        correct: 3,
+        explanation: "Spatial variations relate to geographic data rather than temporal time series analysis."
+      },
+      {
+        question: "In the context of a moving-average model, what does the term 'moving' refer to?",
+        options: [
+          "The model constantly updates its parameters with new data",
+          "The model captures the movement of data points over time",
+          "The model uses a fixed window of past observations to calculate averages",
+          "The model incorporates a dynamic trend component"
+        ],
+        correct: 2,
+        explanation: "A fixed window (e.g., 3-period or 5-period) slides forward across the chronological data."
+      },
+      {
+        question: "What is a time series data set?",
+        options: [
+          "Data set that includes information about geological formations over time",
+          "A data set that consists of observations or measurements taken at different points in time",
+          "A data set used for machine learning algorithms without time elements",
+          "A data set containing information about geographic locations"
+        ],
+        correct: 1,
+        explanation: "Time series data consists of sequential quantitative observations recorded at regular time intervals."
+      },
+      {
+        question: "The prediction of future observations of time series is called intuition.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Predicting future statistical observations is formally termed 'forecasting'."
+      }
+    ]
+  },
+  // SET 2
+  {
+    setTitle: "Set 2: Forecasting Methods",
+    questions: [
+      {
+        question: "Which of the following is a limitation of the base period method of index number construction?",
+        options: [
+          "Changes in the relative importance of different items are not taken into account",
+          "Only price changes are reflected and not quantity changes",
+          "It is difficult to obtain data for the base period",
+          "It cannot be used to compare different time periods"
+        ],
+        correct: 0,
+        explanation: "Base-weighted indexes do not account for shifts in consumer basket preferences over time."
+      },
+      {
+        question: "Which of the following is NOT considered a standard limitation of index numbers?",
+        options: ["Limited number of time periods", "Lack of accuracy", "Difficulty in interpretation", "Dependence on the base year"],
+        correct: 0,
+        explanation: "The number of periods evaluated is an operational choice, not an inherent theoretical limit."
+      },
+      {
+        question: "Which method cannot be used to construct index numbers?",
+        options: ["Simple aggregation method", "Weighted average index", "Exponential smoothing method", "Moving average method"],
+        correct: 2,
+        explanation: "Exponential smoothing is a time series forecasting technique, not an index construction method."
+      },
+      {
+        question: "The base year in an index number is defined as the year:",
+        options: ["in which the index is being calculated", "used as a standard for comparison", "with the highest value", "with the lowest value"],
+        correct: 1,
+        explanation: "The base year serves as the baseline value (100) for percentage relative calculations."
+      },
+      {
+        question: "Which of the following best defines real income? Income:",
+        options: ["earned from investments", "adjusted for inflation", "before taxes and deductions", "earned from self-employment"],
+        correct: 1,
+        explanation: "Real income adjusts nominal monetary wages by price indexes (CPI) to reflect true purchasing power."
+      },
+      {
+        question: "What is purchasing power?",
+        options: ["The amount of money earned", "Total household income", "The ability to buy goods and services with money", "The rate of price increase"],
+        correct: 2,
+        explanation: "Purchasing power represents the quantity of goods or services that one unit of currency can buy."
+      },
+      {
+        question: "How does inflation affect purchasing power? Inflation _____ purchasing power.",
+        options: ["has no impact on", "increases", "decreases", "stabilizes"],
+        correct: 2,
+        explanation: "As general price levels rise, each monetary unit buys fewer goods, reducing purchasing power."
+      },
+      {
+        question: "What is a time series data set?",
+        options: [
+          "Geological information mapped over geographical spans",
+          "Observations or measurements taken sequentially at different points in time",
+          "Static cross-sectional demographic records",
+          "Unordered spatial coordinates"
+        ],
+        correct: 1,
+        explanation: "Sequentially ordered data collected across uniform time intervals defines a time series."
+      },
+      {
+        question: "What is the basic purpose of trend analysis in time series modeling?",
+        options: ["To identify seasonal patterns", "To decompose random noise", "To identify long-term patterns in the data", "To forecast immediate daily fluctuations"],
+        correct: 2,
+        explanation: "Trend analysis isolates the underlying smooth long-term trajectory of the series."
+      },
+      {
+        question: "Which component represents persistent long-term upward/downward movement?",
+        options: ["Seasonal component", "Irregular component", "Trend component", "Cyclical component"],
+        correct: 2,
+        explanation: "The secular trend component isolates multi-year direction."
+      },
+      {
+        question: "What is the moving-average method primarily used for in time series analysis?",
+        options: ["Identifying long-term trends by smoothing fluctuations", "Predicting exact random shocks", "Detecting spatial variations", "Decomposing qualitative data"],
+        correct: 0,
+        explanation: "Moving averages smooth out short-term fluctuations to highlight underlying trends."
+      },
+      {
+        question: "In moving-average models, what does 'moving' signify?",
+        options: ["Changing formulas every period", "Data points moving across charts", "Using a sliding window of fixed past observations", "Calculating dynamic trend slopes"],
+        correct: 2,
+        explanation: "The average 'moves' by adding the newest observation and dropping the oldest."
+      },
+      {
+        question: "Time series decomposition is meant to:",
+        options: ["Make data look complex", "Break down a time series into its individual components", "Smooth out all real variations", "Synthesize fake data"],
+        correct: 1,
+        explanation: "Decomposition separates a series into Trend, Seasonal, Cyclical, and Irregular components."
+      },
+      {
+        question: "In standard additive decomposition, what are the three primary components?",
+        options: ["Trend, seasonality, and noise", "Trend, volatility, and outliers", "Seasonality, cycle, and momentum", "Noise, momentum, and variance"],
+        correct: 0,
+        explanation: "Additive Model: $Y_t = \\text{Trend} + \\text{Seasonality} + \\text{Irregular/Noise}$."
+      },
+      {
+        question: "The primary purpose of using time series models in forecasting is to:",
+        options: ["Analyse cross-sectional survey data", "Verify experimental controls", "Make predictions about future data based on historical patterns", "Measure spatial correlation"],
+        correct: 2,
+        explanation: "Historical continuity allows time series models to project future values."
+      },
+      {
+        question: "Which component is typically NOT considered in time series forecasting?",
+        options: ["Trend", "Seasonality", "Cyclical patterns", "Spatial variations"],
+        correct: 3,
+        explanation: "Spatial variation belongs to spatial statistics, not time series analysis."
+      },
+      {
+        question: "Which formula calculates a simple base-weighted index number?",
+        options: [
+          "Median = (Sum of values) / N",
+          "Average = (Sum of values) / N",
+          "Index = (Current Value / Base Value) * 100",
+          "Mode = Most frequent value"
+        ],
+        correct: 2,
+        explanation: "Base-weighted index computes current period relative to base period multiplied by 100."
+      },
+      {
+        question: "What metric measures the degree of linear relationship between two variables?",
+        options: ["Regression slope", "Correlation determination", "Coefficient of determination", "Coefficient of correlation"],
+        correct: 3,
+        explanation: "Pearson's correlation coefficient (r) measures linear direction and strength."
+      },
+      {
+        question: "Interpret a correlation coefficient of 0.9837:",
+        options: ["Strong", "Very strong", "Mild strong", "Average"],
+        correct: 1,
+        explanation: "Correlation values exceeding 0.90 signify a very strong linear association."
+      },
+      {
+        question: "Which component of a time series reflects changes within a 12-month period?",
+        options: ["Cyclical variation", "Secular variation", "Random variation", "Seasonal variation"],
+        correct: 3,
+        explanation: "Seasonal fluctuations recur regularly within a year or shorter recurring cycles."
+      }
+    ]
+  },
+  // SET 3
+  {
+    setTitle: "Set 3: Regression & Price Indexes",
+    questions: [
+      {
+        question: "Which of the following represents a standard simple linear regression model?",
+        options: ["X = a + by", "Y = a + bx", "Y = a / by", "X = a / bx"],
+        correct: 1,
+        explanation: "In $Y = a + bx$, $Y$ is the dependent variable, $a$ is intercept, $b$ is slope, and $x$ is independent variable."
+      },
+      {
+        question: "The variables that cause changes in a regression model are called:",
+        options: ["Dependent variables", "Independent variables", "Continuous variables", "Intervening variables"],
+        correct: 1,
+        explanation: "Independent variables (explanatory variables) drive changes in the dependent output variable."
+      },
+      {
+        question: "Two quantities are said to be _____ when movements in one are accompanied by movements in the other.",
+        options: ["Regressed", "Interrelated", "Correlated", "Related"],
+        correct: 2,
+        explanation: "Correlation quantifies co-variation between paired quantitative variables."
+      },
+      {
+        question: "What metric measures the linear relationship strength between two variables?",
+        options: ["Regression", "Correlation determination", "Coefficient of determination", "Coefficient of correlation"],
+        correct: 3,
+        explanation: "Coefficient of correlation (r) measures linear association."
+      },
+      {
+        question: "How will you interpret the correlation coefficient r = 0.985?",
+        options: ["Strong", "Very strong", "Mild strong", "Averagely strong"],
+        correct: 1,
+        explanation: "Values above 0.90 demonstrate a very strong linear relationship."
+      },
+      {
+        question: "Which time series component deals with changes occurring within a single year?",
+        options: ["Cyclical variation", "Secular variation", "Random variation", "Seasonal variation"],
+        correct: 3,
+        explanation: "Seasonal variations happen within a annual calendar scope."
+      },
+      {
+        question: "What is the relationship between X and Y with a coefficient of 0.754?",
+        options: ["Positive correlation", "Relative correlation", "Direct correlation", "Inverse relationship"],
+        correct: 0,
+        explanation: "A positive sign indicates direct positive correlation."
+      },
+      {
+        question: "Given Rice (P0=50, Q0=140, Pn=60), Maize (P0=30, Q0=80, Pn=40), Beans (P0=25, Q0=60, Pn=28), calculate Laspeyres Price Index:",
+        options: ["121.83", "121.88", "150.64", "148.95"],
+        correct: 0,
+        explanation: "Laspeyres Index = [Sum(Pn*Q0) / Sum(P0*Q0)] * 100 = (13,280 / 10,900) * 100 = 121.83."
+      },
+      {
+        question: "Using the same data, what is the Paasche Quantity Index for 2018?",
+        options: ["150.64", "121.83", "148.95", "171.60"],
+        correct: 2,
+        explanation: "Paasche Quantity Index = [Sum(Qn*Pn) / Sum(Q0*Pn)] * 100 = (19,780 / 13,280) * 100 = 148.95."
+      },
+      {
+        question: "What is the value of Fisher's Quantity Index for 2018 in the same dataset?",
+        options: ["170.57", "149.79", "139.00", "121.46"],
+        correct: 1,
+        explanation: "Fisher's Index = Square Root of (Laspeyres Quantity Index * Paasche Quantity Index) = sqrt(150.69 * 148.95) = 149.79."
+      },
+      {
+        question: "What is the future value of sales Y = 6.1 + 1.3t when t = 10?",
+        options: ["29.1", "9.1", "39.1", "19.1"],
+        correct: 3,
+        explanation: "Calculation: Y = 6.1 + 1.3(10) = 19.1."
+      },
+      {
+        question: "The prediction of future time series observations is called intuition.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Statistical prediction using quantitative models is termed forecasting."
+      },
+      {
+        question: "Combining trend identification and seasonal adjustments yields seasonally adjusted forecasts.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "True. Combining both isolates baseline trends adjusted for cyclical calendar peaks."
+      },
+      {
+        question: "_____ is that part of personal income that one is free to spend on goods and services or save.",
+        options: ["Real income", "Consumer price index", "Disposable personal income", "Purchasing power"],
+        correct: 2,
+        explanation: "Disposable Personal Income equals personal income minus personal tax liabilities."
+      },
+      {
+        question: "What is another name for the Consumer Price Index (CPI)?",
+        options: ["The retail price index", "The producer price index", "The deflation price index", "The real income index"],
+        correct: 0,
+        explanation: "CPI is frequently designated as the Retail Price Index."
+      },
+      {
+        question: "If there is a perfect negative correlation between variables X and Y, Pearson's r will be:",
+        options: ["-3", "-2", "-1", "0"],
+        correct: 2,
+        explanation: "Pearson's r ranges strictly between -1.0 (perfect negative) and +1.0 (perfect positive)."
+      },
+      {
+        question: "If CPI for August 2017 was 400 (2014=100), what was the real income for a nominal income of GH₵255,000?",
+        options: ["GH₵63,750", "GH₵73,750", "GH₵85,750", "GH₵95,785"],
+        correct: 0,
+        explanation: "Real Income = (Nominal Income / CPI) * 100 = (255,000 / 400) * 100 = GH₵63,750."
+      },
+      {
+        question: "What was the purchasing power of 1 cedi in August 2017 with a CPI of 400?",
+        options: ["GH₵ 0.30", "GH₵ 0.25", "GH₵ 0.15", "GH₵ 0.10"],
+        correct: 1,
+        explanation: "Purchasing Power = 1 / CPI = 1 / 400 = 0.0025 * 100 pesewas = GH₵ 0.25."
+      },
+      {
+        question: "One assumption underlying linear regression is that Y values are statistically independent of each other.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "True. Autocorrelation violates OLS assumptions; observations must be independent."
+      },
+      {
+        question: "Laspeyres quantity index uses the base year quantities as weights.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Laspeyres QUANTITY index uses base year PRICES (P0) as weights."
+      }
+    ]
+  },
+  // SET 4
+  {
+    setTitle: "Set 4: Econometric Models",
+    questions: [
+      {
+        question: "An increase in rainfall accompanied by an increase in umbrella sales represents:",
+        options: ["positive correlation", "negative correlation", "un-correlation", "no correlation"],
+        correct: 0,
+        explanation: "When two variables move in the same direction, correlation is positive."
+      },
+      {
+        question: "Which of the following is an example of a linear regression model?",
+        options: ["y = 2 + 4x^3", "m = a + bx", "x = m + by^2", "z = a^3 + bx^2"],
+        correct: 1,
+        explanation: "Model $m = a + bx$ is linear with respect to both parameters and explanatory variable x."
+      },
+      {
+        question: "A measure of the degree of covariability between two variables is known as the:",
+        options: ["correlation", "coefficient of variation", "coefficient of determination", "coefficient of correlation"],
+        correct: 3,
+        explanation: "Coefficient of correlation measures relative covariability divided by product of standard deviations."
+      },
+      {
+        question: "If correlation between M and N is 0.9648, it means there is:",
+        options: ["a correlation between M and N", "no relationship between M and N", "a direct relationship between M and N", "an inverse relationship between M and N"],
+        correct: 2,
+        explanation: "A positive coefficient signifies a direct relationship."
+      },
+      {
+        question: "If the coefficient of correlation r = 0.89, what is the coefficient of determination (r^2)?",
+        options: ["0.68", "0.89", "0.98", "0.79"],
+        correct: 3,
+        explanation: "Calculation: r^2 = (0.89)^2 = 0.7921 approx 0.79."
+      },
+      {
+        question: "If Y = 20 + 70X, what is the estimated value of Y when X = 20?",
+        options: ["1710", "1420", "1820", "1810"],
+        correct: 1,
+        explanation: "Calculation: Y = 20 + 70(20) = 20 + 1400 = 1420."
+      },
+      {
+        question: "In regression CON = 500 + 0.75Y with standard errors (65.5) and (0.25), which test is used for hypothesis testing of slope beta1?",
+        options: ["F-distribution", "statistical distribution", "Z-distribution", "t-distribution"],
+        correct: 3,
+        explanation: "Testing individual coefficient significance in sample regression uses the t-distribution."
+      },
+      {
+        question: "What does the value 500 represent in the regression model CON = 500 + 0.75Y?",
+        options: ["slope", "independent variable", "vertical intercept", "dependent variable"],
+        correct: 2,
+        explanation: "500 is $b_0$, representing the vertical intercept (consumption when income Y = 0)."
+      },
+      {
+        question: "What does the value 0.75 represent in the regression model CON = 500 + 0.75Y?",
+        options: ["independent variable", "vertical intercept", "dependent variable", "slope"],
+        correct: 3,
+        explanation: "0.75 is $b_1$, representing the slope coefficient (Marginal Propensity to Consume)."
+      },
+      {
+        question: "Calculate the t-value for intercept b0 (b0 = 500, SE = 65.5):",
+        options: ["6.63", "7.63", "65.5", "500"],
+        correct: 1,
+        explanation: "t-statistic = b0 / SE(b0) = 500 / 65.5 = 7.633."
+      },
+      {
+        question: "Which time series component deals with multi-year oscillations above and below the trend?",
+        options: ["Secular trend", "Cyclical variation", "Seasonal variation", "Random variation"],
+        correct: 1,
+        explanation: "Cyclical variations reflect multi-year economic boom-and-bust business cycles."
+      },
+      {
+        question: "A simple quantity index is calculated as:",
+        options: ["(Q0 / 100Qn) * 100", "(Qn / 100Q0) * 100", "(Qn / Q0) * 100", "(Q0 / Qn) * 100"],
+        correct: 2,
+        explanation: "Simple Quantity Index = (Current Quantity / Base Quantity) * 100."
+      },
+      {
+        question: "If CPI in January 2012 was 115 (2000=100), what was the real income of GH₵ 200,000?",
+        options: ["GH₵ 163,931", "GH₵ 163,913", "GH₵ 173,913", "GH₵ 173,931"],
+        correct: 2,
+        explanation: "Real Income = (200,000 / 115) * 100 = 173,913.04."
+      },
+      {
+        question: "Rebasing indexes (2010=100: 2011=104, 2012=113). Compute new index for 2011 with base 2012=100:",
+        options: ["129.00", "121.04", "104.00", "92.04"],
+        correct: 3,
+        explanation: "New Index 2011 = (Old Index 2011 / Old Index 2012) * 100 = (104 / 113) * 100 = 92.04."
+      },
+      {
+        question: "Using the same series (2014 old index = 129), compute new index for 2014 with base 2012=100:",
+        options: ["114.16", "129.09", "139.30", "145.15"],
+        correct: 0,
+        explanation: "New Index 2014 = (129 / 113) * 100 = 114.16."
+      },
+      {
+        question: "Studying seasonal variation is useful in short-term business forecasting.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "True. Seasonal patterns assist in quarterly operational planning and inventory management."
+      },
+      {
+        question: "The standard error of the estimate measures dispersion around the mean.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Standard error of the estimate measures dispersion around the REGRESSION LINE."
+      },
+      {
+        question: "The coefficient of determination for r = 0.9648 is 0.9308.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "True. r^2 = (0.9648)^2 = 0.930839."
+      },
+      {
+        question: "Pearson's r assumes qualitative variables while Spearman's rank correlation assumes quantitative variables.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Pearson's requires quantitative continuous data; Spearman's handles qualitative ordinal ranks."
+      },
+      {
+        question: "R^2 = 0.93 means 93% of variation in dependent variable is explained by variation in dependent variable.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. It means 93% of variation in dependent variable is explained by the INDEPENDENT variable."
+      }
+    ]
+  }
+];
+
+// App State Management
+let currentSetIndex = 0;
+let currentQuestionIndex = 0;
+
+// User Response Tracking Matrix: userAnswers[setIndex][questionIndex] = chosenOptionIndex
+let userAnswers = Array(4).fill(null).map(() => Array(20).fill(null));
+
+// DOM Elements
+const totalProgressEl = document.getElementById('total-progress');
+const overallAccuracyEl = document.getElementById('overall-accuracy');
+const currentSetScoreEl = document.getElementById('current-set-score');
+const progressBarEl = document.getElementById('progress-bar');
+const questionNumberEl = document.getElementById('question-number');
+const setTitleBadgeEl = document.getElementById('set-title-badge');
+const questionTextEl = document.getElementById('question-text');
+const optionsGridEl = document.getElementById('options-grid');
+const explanationBoxEl = document.getElementById('explanation-box');
+const explanationTextEl = document.getElementById('explanation-text');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+
+// Initialize App
+function initApp() {
+  renderQuestion();
+  updateLedger();
+}
+
+// Render Current Question
+function renderQuestion() {
+  const currentSet = quizData[currentSetIndex];
+  const q = currentSet.questions[currentQuestionIndex];
+  const selectedOption = userAnswers[currentSetIndex][currentQuestionIndex];
+
+  // Header and Progress Updates
+  setTitleBadgeEl.textContent = currentSet.setTitle;
+  questionNumberEl.textContent = `Question ${currentQuestionIndex + 1} of ${currentSet.questions.length}`;
+  questionTextEl.textContent = q.question;
+  
+  // Progress Bar
+  const progressPercent = ((currentQuestionIndex + 1) / currentSet.questions.length) * 100;
+  progressBarEl.style.width = `${progressPercent}%`;
+
+  // Options Rendering
+  optionsGridEl.innerHTML = '';
+  q.options.forEach((optText, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = `${String.fromCharCode(65 + index)}. ${optText}`;
+
+    if (selectedOption !== null) {
+      btn.disabled = true;
+      if (index === q.correct) {
+        btn.classList.add('show-correct');
+      }
+      if (index === selectedOption) {
+        if (selectedOption === q.correct) {
+          btn.classList.add('selected-correct');
+        } else {
+          btn.classList.add('selected-incorrect');
+        }
+      }
+    } else {
+      btn.onclick = () => selectOption(index);
+    }
+
+    optionsGridEl.appendChild(btn);
+  });
+
+  // Explanation Box Rendering
+  if (selectedOption !== null) {
+    explanationTextEl.textContent = q.explanation;
+    explanationBoxEl.classList.add('active');
+  } else {
+    explanationBoxEl.classList.remove('active');
+  }
+
+  // Button States
+  prevBtn.disabled = (currentQuestionIndex === 0);
+  if (currentQuestionIndex === currentSet.questions.length - 1) {
+    nextBtn.textContent = (currentSetIndex < quizData.length - 1) ? "Next Set" : "Finish Quiz";
+  } else {
+    nextBtn.textContent = "Next Question";
+  }
+}
+
+// Select Option Event
+function selectOption(optionIndex) {
+  userAnswers[currentSetIndex][currentQuestionIndex] = optionIndex;
+  renderQuestion();
+  updateLedger();
+}
+
+// Update Global Score Ledger
+function updateLedger() {
+  let totalAnswered = 0;
+  let totalCorrect = 0;
+  let currentSetCorrect = 0;
+  let currentSetAnswered = 0;
+
+  userAnswers.forEach((setAns, sIdx) => {
+    setAns.forEach((ans, qIdx) => {
+      if (ans !== null) {
+        totalAnswered++;
+        const isCorrect = (ans === quizData[sIdx].questions[qIdx].correct);
+        if (isCorrect) totalCorrect++;
+
+        if (sIdx === currentSetIndex) {
+          currentSetAnswered++;
+          if (isCorrect) currentSetCorrect++;
+        }
+      }
+    });
+  });
+
+  // Update DOM Ledger elements
+  totalProgressEl.textContent = `${totalAnswered} / 80`;
+  const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  overallAccuracyEl.textContent = `${accuracy}%`;
+  currentSetScoreEl.textContent = `${currentSetCorrect} / 20`;
+}
+
+// Navigation Functions
+function switchSet(setIdx) {
+  currentSetIndex = setIdx;
+  currentQuestionIndex = 0;
+  
+  // Update Active Tab Styling
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach((tab, index) => {
+    tab.classList.toggle('active', index === setIdx);
+  });
+
+  renderQuestion();
+  updateLedger();
+}
+
+function nextQuestion() {
+  const currentSet = quizData[currentSetIndex];
+  if (currentQuestionIndex < currentSet.questions.length - 1) {
+    currentQuestionIndex++;
+    renderQuestion();
+  } else if (currentSetIndex < quizData.length - 1) {
+    switchSet(currentSetIndex + 1);
+  } else {
+    alert(`Quiz Completed! Your total score is ${overallAccuracyEl.textContent} across 80 questions.`);
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    renderQuestion();
+  }
+}
+
+function resetCurrentSet() {
+  if (confirm("Are you sure you want to reset your answers for this set?")) {
+    userAnswers[currentSetIndex] = Array(20).fill(null);
+    currentQuestionIndex = 0;
+    renderQuestion();
+    updateLedger();
+  }
+}
+
+// Start
+initApp();
+</script>
+</body>
+</html>

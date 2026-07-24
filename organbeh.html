@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Organisational Behaviour - Quiz Ledger</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --correct-color: #10b981;
+            --correct-bg: #ecfdf5;
+            --incorrect-color: #ef4444;
+            --incorrect-bg: #fef2f2;
+            --border-color: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* iOS Button Reset */
+        button {
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 0;
+            font-family: inherit;
+            touch-action: manipulation;
+        }
+
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Metrics Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .metric-card .title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .metric-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        @media (hover: hover) {
+            .tab-btn:hover {
+                background: rgba(37, 99, 235, 0.1);
+                color: var(--primary-color);
+            }
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        /* Quiz Card */
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: var(--border-color);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--card-bg);
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        @media (hover: hover) {
+            .option-btn:hover:not(:disabled) {
+                border-color: var(--primary-color);
+                background: rgba(37, 99, 235, 0.05);
+            }
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            margin-right: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Correct / Incorrect Option States */
+        .option-btn.correct {
+            border-color: var(--correct-color) !important;
+            background-color: var(--correct-bg) !important;
+            color: var(--correct-color) !important;
+            font-weight: 600;
+        }
+
+        .option-btn.correct .option-prefix {
+            background: var(--correct-color);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect-color) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: var(--incorrect-color) !important;
+        }
+
+        .option-btn.incorrect .option-prefix {
+            background: var(--incorrect-color);
+            color: #ffffff;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 14px 16px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .explanation-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .explanation-box p {
+            color: #1e40af;
+            font-size: 0.9rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: var(--incorrect-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        @media (hover: hover) {
+            .btn-secondary:hover:not(:disabled) { background: var(--border-color); }
+            .btn-danger:hover { background: #fca5a5; color: #991b1b; }
+            .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Organisational Behaviour Quiz Ledger</h1>
+        <p>Interactive Study & Self-Assessment Portal</p>
+    </header>
+
+    <!-- Dashboard Metrics Bar -->
+    <div class="dashboard">
+        <div class="metric-card">
+            <div class="title">Overall Progress</div>
+            <div class="value" id="metric-progress">0 / 80</div>
+        </div>
+        <div class="metric-card">
+            <div class="title">Overall Accuracy</div>
+            <div class="value" id="metric-accuracy">0%</div>
+        </div>
+        <div class="metric-card">
+            <div class="title">Current Set Score</div>
+            <div class="value" id="metric-set-score">0 / 20</div>
+        </div>
+    </div>
+
+    <!-- Tabbed Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchSet(0)">Set 1</button>
+        <button class="tab-btn" onclick="switchSet(1)">Set 2</button>
+        <button class="tab-btn" onclick="switchSet(2)">Set 3</button>
+        <button class="tab-btn" onclick="switchSet(3)">Set 4</button>
+    </div>
+
+    <!-- Interactive Quiz Card -->
+    <div class="quiz-card">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="top-progress-bar"></div>
+        </div>
+
+        <div class="quiz-header">
+            <span id="set-title">Set 1: Foundational Concepts & Motivation</span>
+            <span id="question-counter">Question 1 / 20</span>
+        </div>
+
+        <div class="question-text" id="question-text">Loading question...</div>
+
+        <div class="options-grid" id="options-grid"></div>
+
+        <div class="explanation-box" id="explanation-box">
+            <h4>Explanation</h4>
+            <p id="explanation-text"></p>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="controls">
+            <button class="btn btn-secondary" id="btn-prev" onclick="navigateQuestion(-1)">Previous</button>
+            <button class="btn btn-danger" onclick="resetCurrentSet()">Reset Set</button>
+            <button class="btn btn-primary" id="btn-next" onclick="navigateQuestion(1)">Next Question</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // SET 1
+            [
+                {
+                    question: "What is the primary focus of Organizational Behaviour (OB)?",
+                    options: ["Financial performance", "Impact of individuals and groups on behavior", "Technical skills", "Marketing strategies"],
+                    correct: 1,
+                    explanation: "OB focuses on how individual, group, and structural factors influence behavior within organizations to improve organizational effectiveness."
+                },
+                {
+                    question: "Which of the following is NOT a contributing field to Organizational Behaviour?",
+                    options: ["Psychology", "Sociology", "Mathematics", "Anthropology"],
+                    correct: 2,
+                    explanation: "Psychology, Sociology, and Anthropology are key behavioral sciences that contribute to OB. Mathematics is not considered a primary contributing behavioral field."
+                },
+                {
+                    question: "What does the term 'organizational structure' refer to?",
+                    options: ["Physical layout of an organization", "Hierarchy and roles within an organization", "Technology used in an organization", "Financial resources of an organization"],
+                    correct: 1,
+                    explanation: "Organizational structure defines how tasks are formally divided, grouped, and coordinated, setting the hierarchy and roles."
+                },
+                {
+                    question: "Which of the following is a key component that needs to be managed in organizations?",
+                    options: ["People", "Equipment", "Finances", "All of the above"],
+                    correct: 3,
+                    explanation: "Comprehensive management requires balancing human, physical (equipment), and financial resources."
+                },
+                {
+                    question: "What is one significant challenge for management in a global environment?",
+                    options: ["Increased local competition", "Managing a diverse workforce", "Reducing operational costs", "Enhancing product quality"],
+                    correct: 1,
+                    explanation: "Global operations require managing diverse cultural backgrounds, communication styles, and workforce demographics."
+                },
+                {
+                    question: "What is motivation primarily concerned with?",
+                    options: ["Employee salary", "Individual needs and desires", "Company policies", "Market competition"],
+                    correct: 1,
+                    explanation: "Motivation involves the psychological processes that cause the arousal, direction, and persistence of voluntary actions towards goals based on needs and desires."
+                },
+                {
+                    question: "Which of the following is considered an intrinsic motivator?",
+                    options: ["Salary increases", "Recognition", "Personal satisfaction", "Job security"],
+                    correct: 2,
+                    explanation: "Intrinsic motivators originate internally from performing the activity itself, such as personal satisfaction or a sense of accomplishment."
+                },
+                {
+                    question: "Maslow's hierarchy of needs includes which of the following levels?",
+                    options: ["Safety needs", "Social needs", "Self-actualization", "All of the above"],
+                    correct: 3,
+                    explanation: "Maslow's model includes Physiological, Safety, Social, Esteem, and Self-Actualization needs."
+                },
+                {
+                    question: "Which theory explains the relationship between effort, performance, and outcomes?",
+                    options: ["Maslow's Theory", "Herzberg's Two-Factor Theory", "Expectancy Theory", "Equity Theory"],
+                    correct: 2,
+                    explanation: "Vroom's Expectancy Theory proposes that motivation depends on the relationship between effort, performance level, and desirability of expected outcomes."
+                },
+                {
+                    question: "The systematic study of the actions and attitudes that people exhibit within organizations is known as _______.",
+                    options: ["Organizational behaviour", "Consumer behaviour", "Employee behaviour", "Human behaviour"],
+                    correct: 0,
+                    explanation: "Organizational Behaviour explicitly studies human actions, attitudes, and performance in an organizational context."
+                },
+                {
+                    question: "All the following could be classified as an importance of motivation EXCEPT _______.",
+                    options: ["High level of performance", "High employee turnover", "Acceptance of organization change", "Organizational image"],
+                    correct: 1,
+                    explanation: "Proper motivation reduces employee turnover rather than causing high turnover."
+                },
+                {
+                    question: "Which of the following involves engaging in a behaviour because it is personally rewarding?",
+                    options: ["Extrinsic motivation", "Achieving goals", "Intrinsic motivation", "Satisfaction of needs"],
+                    correct: 2,
+                    explanation: "Intrinsic motivation occurs when individuals act for internal fulfillment rather than external rewards."
+                },
+                {
+                    question: "Telecommuting can also be known as _______.",
+                    options: ["Teleworking", "Technology", "Telecommunication", "Virtual teams"],
+                    correct: 0,
+                    explanation: "Telecommuting is frequently referred to as teleworking, remote working, or flexible workplace arrangement."
+                },
+                {
+                    question: "Among motivation theories, which ones try to identify what our 'needs' are and relate motivation to fulfilling these needs?",
+                    options: ["Needs", "Theory X", "ERG theory", "Needs theories"],
+                    correct: 3,
+                    explanation: "Needs (or Content) theories focus specifically on identifying internal needs that trigger motivation (e.g., Maslow, Herzberg, McClelland)."
+                },
+                {
+                    question: "In which year did Abraham Maslow suggest his theory of human motivation?",
+                    options: ["1953", "1963", "1943", "1933"],
+                    correct: 2,
+                    explanation: "Abraham Maslow published his seminal paper 'A Theory of Human Motivation' in 1943."
+                },
+                {
+                    question: "Clothing, shelter, and rest all form part of which category of needs in Maslow's hierarchy?",
+                    options: ["Security", "Physiological", "Social", "Esteem"],
+                    correct: 1,
+                    explanation: "Physiological needs encompass basic biological survival requirements including food, water, clothing, shelter, and rest."
+                },
+                {
+                    question: "Needs theories are also known as _______.",
+                    options: ["Abraham Maslow's theory", "McGregos's theory", "Abraham Needs theory", "Content theories"],
+                    correct: 3,
+                    explanation: "Needs theories are broadly categorized as 'Content theories' because they focus on the content of what motivates people."
+                },
+                {
+                    question: "Which theory explains why an employee in one company compares himself with an employee in another company in terms of rewards?",
+                    options: ["Expectancy", "Equity theory", "Ability identification", "Valence"],
+                    correct: 1,
+                    explanation: "Equity Theory states that individuals evaluate fairness by comparing their input/outcome ratio with that of reference others."
+                },
+                {
+                    question: "Which theory is based on effort, performance, and reward relationships?",
+                    options: ["Theory X", "Equity theory", "Expectancy theory", "Theory Y"],
+                    correct: 2,
+                    explanation: "Expectancy theory calculates motivation based on Expectancy (Effort -> Performance), Instrumentality (Performance -> Reward), and Valence (Reward value)."
+                },
+                {
+                    question: "Organisational rewards which allow employees the right to purchase company shares at a future date at a predetermined price are termed as _______.",
+                    options: ["Bonuses", "Share options", "Gain sharing plan", "Employee share ownership"],
+                    correct: 1,
+                    explanation: "Share (or stock) options give employees the right to buy company equity at a set price in the future."
+                }
+            ],
+
+            // SET 2
+            [
+                {
+                    question: "What transpires when an employer imposes a salary cut on an employee due to her prolonged absence from work?",
+                    options: ["Pure Punishment", "Positive reinforcement", "Extinction", "Negative reinforcement"],
+                    correct: 0,
+                    explanation: "Punishment applies a negative consequence (salary cut) to reduce an undesired behavior (absenteeism)."
+                },
+                {
+                    question: "Those who pay attention to reality, what they learn from their own senses, and gaining experience out of them are known as _______.",
+                    options: ["Sensings", "Extroverts", "Introverts", "Realistics"],
+                    correct: 0,
+                    explanation: "In Myers-Briggs (MBTI) typology, 'Sensing' types focus on present realities, practical facts, and direct sensory experiences."
+                },
+                {
+                    question: "Need theory suggests that self-interest plays a key role in motivation. True or False?",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "True. Many motivation theories assert that individuals act in ways that fulfill personal needs or self-interests."
+                },
+                {
+                    question: "According to Maslow's Need Hierarchy, physiological needs are considered to be higher-order needs. True or False?",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Physiological needs are the lowest (most basic) level of needs; higher-order needs are social, esteem, and self-actualization."
+                },
+                {
+                    question: "Goal setting is well accepted as a motivational tool because research has shown that setting easy goals improves performance. True or False?",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Goal-Setting Theory emphasizes that specific and *challenging* (difficult) goals lead to higher performance than easy goals."
+                },
+                {
+                    question: "One problem that goal setting creates is too much flexibility when done properly. True or False?",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Proper goal setting provides clarity and focus rather than excessive or problematic flexibility."
+                },
+                {
+                    question: "Self-discipline incorporates self-motivation because it enables you to achieve goals without being nagged. True or False?",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "True. Self-discipline empowers self-directed drive and goal achievement without reliance on external prodding."
+                },
+                {
+                    question: "When an organization adopts a system of interdependence/interaction with the external environment, it employs which anchor?",
+                    options: ["Contingency anchor", "Scientific anchor", "Open system anchor", "Multidisciplinary anchor"],
+                    correct: 2,
+                    explanation: "The Open System anchor views organizations as complex entities that constantly interact with and depend on their external environment."
+                },
+                {
+                    question: "How many primary types of reinforcement are identified in operant conditioning?",
+                    options: ["4", "6", "5", "9"],
+                    correct: 0,
+                    explanation: "The 4 primary reinforcement strategies are Positive Reinforcement, Negative Reinforcement, Punishment, and Extinction."
+                },
+                {
+                    question: "Job satisfaction can be measured by emotional response; hence it can be directly seen and inferred. True or False?",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Attitudes and emotional states like job satisfaction cannot be directly 'seen'; they are inferred through behaviors, surveys, and expressions."
+                },
+                {
+                    question: "Theory Y requires an authoritarian style of management. True or False?",
+                    options: ["False", "True"],
+                    correct: 0,
+                    explanation: "False. Theory X correlates with authoritarian management; Theory Y advocates participative and democratic management."
+                },
+                {
+                    question: "In Theory Y, management does NOT involve employees in decision making. True or False?",
+                    options: ["False", "True"],
+                    correct: 0,
+                    explanation: "False. Theory Y assumes workers are responsible and creative, encouraging participation in decision making."
+                },
+                {
+                    question: "Selecting goals is NOT the first stage in the process of motivation. True or False?",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "True. The motivation process starts with unsatisfied needs or drives, which then prompt goal-directed search and selection."
+                },
+                {
+                    question: "Extrinsic Motivation does NOT involve any financial reward. True or False?",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Extrinsic motivation frequently involves financial rewards such as pay raises, bonuses, and monetary incentives."
+                },
+                {
+                    question: "The following form parts of perceptual errors EXCEPT _______.",
+                    options: ["Halo effects", "Stereotyping", "Recency effects", "Relax effects"],
+                    correct: 3,
+                    explanation: "'Relax effects' is not an established perceptual error or cognitive bias in OB."
+                },
+                {
+                    question: "The tendency to quickly form an opinion of people based on the first information received about them is known as _______.",
+                    options: ["Primacy effect", "Recency effect", "Projections", "Halo effect"],
+                    correct: 0,
+                    explanation: "The Primacy effect occurs when initial information exerts a disproportionate influence on overall perception."
+                },
+                {
+                    question: "Stephen P. Robbins defines Organizational Behaviour as a _______ study of actions and attitudes within organizations.",
+                    options: ["asymmetrical", "symmetrical", "irregular", "systematic"],
+                    correct: 3,
+                    explanation: "OB uses systematic study—looking at relationships, attempting to attribute causes and effects, and drawing conclusions based on scientific evidence."
+                },
+                {
+                    question: "Nana Ama alters her behavior based on environmental consequences to maximize positive outcomes. Which learning approach is this?",
+                    options: ["Observational learning", "Learning through feedback", "Learning through rewards and punishment", "Experiential learning"],
+                    correct: 3,
+                    explanation: "Experiential/Operant learning involves adjusting behavior based on direct past experiences and resulting consequences."
+                },
+                {
+                    question: "The field in OB which is an applied science attempting to explain and predict individual human behavior is _______.",
+                    options: ["Sociology", "Anthropology", "Psychology", "Political science"],
+                    correct: 2,
+                    explanation: "Psychology focuses on individual human behavior, learning, perception, and emotion."
+                },
+                {
+                    question: "The OB anchor advocating the use of systematically gathered data to explain natural phenomenon is known as _______.",
+                    options: ["Multidisciplinary", "Contingency anchor", "Scientific method anchor", "Multiple level of analysis anchor"],
+                    correct: 2,
+                    explanation: "The Scientific Method anchor relies on empirical data, structured research, and rigorous testing."
+                }
+            ],
+
+            // SET 3
+            [
+                {
+                    question: "Which anchor debunks the use of universal 'one best way' rules to predict and explain situations in organizations?",
+                    options: ["Contingency anchor", "Scientific method anchor", "Multiple level of analysis", "Open system anchor"],
+                    correct: 0,
+                    explanation: "The Contingency anchor suggests that particular actions or behaviors have different outcomes under different situations (no universal best approach)."
+                },
+                {
+                    question: "Which of the following is NOT a primary direct factor determining Job Satisfaction?",
+                    options: ["Supervision", "Work content", "Open system", "Supportive working condition"],
+                    correct: 2,
+                    explanation: "Work content, supervision, and working conditions directly determine job satisfaction. 'Open system' is a structural OB anchor."
+                },
+                {
+                    question: "Which of these can be considered a strong internal drive that propels a person to act for its fulfillment?",
+                    options: ["Satisfaction", "Performance", "Opportunity", "Motivation"],
+                    correct: 3,
+                    explanation: "Motivation is the internal driving force that energizes and directs action toward satisfying unmet needs."
+                },
+                {
+                    question: "All the following are examples of Extrinsic Motivation EXCEPT _______.",
+                    options: ["Studying solely because you want internal mastery", "Participating in a sport to win money", "Competing in a contest to win a financial scholarship", "Working extra hours for a cash bonus"],
+                    correct: 0,
+                    explanation: "Studying purely for personal mastery is driven by intrinsic motivation, whereas competing for cash or scholarships is extrinsically motivated."
+                },
+                {
+                    question: "All the following form part of the anchors of organizational behaviour EXCEPT _______.",
+                    options: ["multi-disciplinary anchor", "closed systems anchor", "contingency anchor", "scientific method anchor"],
+                    correct: 1,
+                    explanation: "OB utilizes an *open* systems anchor, not a closed systems anchor."
+                },
+                {
+                    question: "The perception that employees are happy to work, self-motivated, creative, and desire responsibility stems from which theory?",
+                    options: ["Theory Y", "Herzberg Theory", "Theory X", "McGregor Theory"],
+                    correct: 0,
+                    explanation: "Douglas McGregor's Theory Y presents a positive view of human behavior in work settings."
+                },
+                {
+                    question: "Which personality orientation believes that 'the ends justify the means'?",
+                    options: ["Early experience", "Machiavellianism", "Self monitoring", "Self esteem"],
+                    correct: 1,
+                    explanation: "High Machiavellianism is characterized by pragmatism, emotional distance, and the belief that results matter more than the methods used."
+                },
+                {
+                    question: "Which of the following provides employees with a direct internal sense of accomplishment?",
+                    options: ["Extrinsic rewards", "Intrinsic rewards"],
+                    correct: 1,
+                    explanation: "Intrinsic rewards arise directly from completing meaningful work, yielding feelings of growth, mastery, and accomplishment."
+                },
+                {
+                    question: "What is the primary assumption of McGregor's Theory X regarding employees?",
+                    options: ["They are self-motivated", "They dislike work and need to be controlled", "They seek responsibility", "They are creative and innovative"],
+                    correct: 1,
+                    explanation: "Theory X assumes employees inherently dislike work, avoid responsibility, and must be coerced or closely controlled."
+                },
+                {
+                    question: "What is perception primarily concerned with?",
+                    options: ["How individuals interpret their environment", "How individuals are motivated", "How teams function", "How organizations are structured"],
+                    correct: 0,
+                    explanation: "Perception is the process by which individuals organize and interpret sensory impressions to give meaning to their environment."
+                },
+                {
+                    question: "Which of the following environmental factors does NOT directly influence an individual's perceptual process?",
+                    options: ["Personal experiences", "Cultural background", "Weather conditions", "Social norms"],
+                    correct: 2,
+                    explanation: "While background, experience, and culture shape cognitive perceptual filters, ambient daily weather is not a recognized psychological determinant."
+                },
+                {
+                    question: "Attribution theory deals primarily with how _______.",
+                    options: ["people assign causes to events and behaviors", "teams create norms", "organizations are structured", "motivation is measured"],
+                    correct: 0,
+                    explanation: "Attribution theory studies how individuals explain the causes of behavior and events (internal vs. external attributions)."
+                },
+                {
+                    question: "Which Big Five personality trait is associated with a high level of sociability, talkativeness, and assertiveness?",
+                    options: ["Openness", "Conscientiousness", "Extraversion", "Agreeableness"],
+                    correct: 2,
+                    explanation: "Extraversion captures comfort levels with relationships, characterized by sociability, assertiveness, and enthusiasm."
+                },
+                {
+                    question: "Which of the following is a key characteristic of the Trait Theory of personality?",
+                    options: ["Focus on situational factors", "Emphasis on observable behaviors only", "Identification of stable individual characteristics", "Analysis of group dynamics"],
+                    correct: 2,
+                    explanation: "Trait Theory posits that individuals possess stable, enduring characteristics or dispositions that influence behavior across situations."
+                },
+                {
+                    question: "What is the primary focus of Social Cognitive Theory in understanding behavior?",
+                    options: ["Genetic predispositions", "Environmental influences and social interactions on behavior", "Unconscious motivations", "Socialization processes"],
+                    correct: 1,
+                    explanation: "Social Cognitive Theory emphasizes triadic reciprocal determinism: the continuous interaction between cognitive/personal factors, behavior, and environmental influences."
+                },
+                {
+                    question: "What is a standard tool used in organizations to assess employee personality traits?",
+                    options: ["Performance reviews", "Psychological/Personality tests", "Job descriptions", "Financial audits"],
+                    correct: 1,
+                    explanation: "Psychological instruments (e.g., MBTI, Big Five inventories) are specifically designed to measure personality dimensions."
+                },
+                {
+                    question: "Which of the following best describes the concept of organizational culture?",
+                    options: ["The physical layout of the workplace", "Shared values, beliefs, and norms within an organization", "The formal structure of the organization", "The financial performance of the organization"],
+                    correct: 1,
+                    explanation: "Organizational culture consists of shared assumptions, values, and beliefs that govern how people behave in organizations."
+                },
+                {
+                    question: "Effective communication in an organization is essential for _______.",
+                    options: ["increasing profits", "achieving strategic objectives", "reducing employee turnover", "All of the above"],
+                    correct: 3,
+                    explanation: "Communication touches all administrative functions, fostering goal attainment, morale, clarity, and profitability."
+                },
+                {
+                    question: "Which of the following is NOT a barrier to effective communication?",
+                    options: ["Physical distractions", "Cultural differences", "Open-door policy", "Lack of feedback"],
+                    correct: 2,
+                    explanation: "An open-door policy facilitates transparent communication rather than serving as a barrier."
+                },
+                {
+                    question: "In Herzberg's Motivation-Hygiene theory, factors such as company policy, salary, and working conditions are classed as _______.",
+                    options: ["Motivator factors", "Hygiene factors", "Intrinsic factors", "Growth factors"],
+                    correct: 1,
+                    explanation: "Hygiene factors prevent job dissatisfaction when present, but do not necessarily generate intrinsic satisfaction or motivation."
+                }
+            ],
+
+            // SET 4
+            [
+                {
+                    question: "Which element of perception resides within the observer (e.g., attitudes, motives, interests, past experiences)?",
+                    options: ["Target factor", "Situation factor", "Perceiver factor", "Environmental factor"],
+                    correct: 2,
+                    explanation: "Personal characteristics of the perceiver (attitudes, motives, experiences) strongly color how objects/events are interpreted."
+                },
+                {
+                    question: "Drawing a general impression about an individual on the basis of a single characteristic (e.g., intelligence or appearance) is called _______.",
+                    options: ["Stereotyping", "Halo effect", "Projection", "Contrast effect"],
+                    correct: 1,
+                    explanation: "The Halo effect occurs when a single prominent trait overshadows other characteristics in evaluating a person."
+                },
+                {
+                    question: "Judging someone on the basis of one's perception of the group to which that person belongs is termed _______.",
+                    options: ["Stereotyping", "Halo effect", "First-impression bias", "Selective perception"],
+                    correct: 0,
+                    explanation: "Stereotyping involves assigning traits to an individual based solely on group membership generalization."
+                },
+                {
+                    question: "In Classical Conditioning, an unconditioned stimulus leads directly to a(n) _______.",
+                    options: ["Conditioned response", "Unconditioned response", "Neutral reaction", "Operant behavior"],
+                    correct: 1,
+                    explanation: "An unconditioned stimulus automatically produces an unconditioned (natural) response."
+                },
+                {
+                    question: "Reinforcement that strengthens a desired behavior by withdrawing an unpleasant condition is known as _______.",
+                    options: ["Positive reinforcement", "Negative reinforcement", "Punishment", "Extinction"],
+                    correct: 1,
+                    explanation: "Negative reinforcement increases desired behavior by removing an undesirable stimulus upon performance."
+                },
+                {
+                    question: "Withholding all reinforcement from a previously reinforced behavior until it ceases completely is called _______.",
+                    options: ["Punishment", "Extinction", "Negative reinforcement", "Avoidance"],
+                    correct: 1,
+                    explanation: "Extinction eliminates a behavior by eliminating the reinforcement maintaining it."
+                },
+                {
+                    question: "Which decision-making model assumes the decision-maker has complete information and behaves entirely rationally?",
+                    options: ["Bounded Rationality Model", "Classical Rational Model", "Intuitive Model", "Garbage Can Model"],
+                    correct: 1,
+                    explanation: "The classical rational model assumes complete knowledge of options and consequences to select the optimal choice."
+                },
+                {
+                    question: "Constructing simplified models that extract essential features from problems without capturing all complexity leads to _______.",
+                    options: ["Absolute rationality", "Bounded rationality", "Groupthink", "Cognitive dissonance"],
+                    correct: 1,
+                    explanation: "Bounded rationality acknowledges human cognitive limitations, leading individuals to make 'satisficing' decisions."
+                },
+                {
+                    question: "An individual's belief that he or she is capable of performing a specific task successfully is called _______.",
+                    options: ["Self-esteem", "Self-efficacy", "Locus of control", "Self-monitoring"],
+                    correct: 1,
+                    explanation: "Self-efficacy refers to task-specific confidence in one's ability to succeed."
+                },
+                {
+                    question: "Individuals with an internal locus of control believe that outcomes in their lives are primarily determined by _______.",
+                    options: ["Luck and chance", "Powerful external figures", "Their own actions and efforts", "Fate"],
+                    correct: 2,
+                    explanation: "Internals attribute outcomes to their own actions, skill, and effort."
+                },
+                {
+                    question: "Which stage of group development is characterized by conflict over roles and leadership within the team?",
+                    options: ["Forming", "Storming", "Norming", "Performing"],
+                    correct: 1,
+                    explanation: "The Storming stage involves intra-group conflict as members test boundaries and establish roles."
+                },
+                {
+                    question: "In Tuckman's model, cohesive group relationships and settled shared expectations occur during which stage?",
+                    options: ["Forming", "Storming", "Norming", "Performing"],
+                    correct: 2,
+                    explanation: "During Norming, close relationships develop, consensus is achieved, and group identity solidifies."
+                },
+                {
+                    question: "The phenomenon where group members minimize conflict and reach consensus without critical evaluation is known as _______.",
+                    options: ["Group polarization", "Groupthink", "Social loafing", "Synergy"],
+                    correct: 1,
+                    explanation: "Groupthink is a decision-making bias where pressure for conformity overrides critical appraisal of alternatives."
+                },
+                {
+                    question: "The tendency for individuals to expend less effort when working collectively than when working individually is termed _______.",
+                    options: ["Social loafing", "Synergy", "Group polarization", "Role ambiguity"],
+                    correct: 0,
+                    explanation: "Social loafing describes reduced individual effort in group settings due to diffusion of responsibility."
+                },
+                {
+                    question: "Which power base rests on an individual's special skills, knowledge, or expertise?",
+                    options: ["Coercive power", "Legitimate power", "Expert power", "Referent power"],
+                    correct: 2,
+                    explanation: "Expert power stems from possessive specialized expertise, skills, or unique domain knowledge."
+                },
+                {
+                    question: "Power derived from formal hierarchical position or title in an organization is known as _______.",
+                    options: ["Referent power", "Reward power", "Legitimate power", "Expert power"],
+                    correct: 2,
+                    explanation: "Legitimate power is structural authority granted by an individual's formal organizational position."
+                },
+                {
+                    question: "Leadership theories that focus on personal characteristics that differentiate leaders from non-leaders are known as _______.",
+                    options: ["Behavioral theories", "Trait theories", "Contingency theories", "Transformational theories"],
+                    correct: 1,
+                    explanation: "Trait theories isolate specific physical, personality, or intellectual attributes associated with leadership."
+                },
+                {
+                    question: "Leaders who inspire followers to transcend self-interest for the good of the organization are called _______.",
+                    options: ["Transactional leaders", "Transformational leaders", "Autocratic leaders", "Laissez-faire leaders"],
+                    correct: 1,
+                    explanation: "Transformational leaders inspire, motivate, and transform followers to achieve exceptional performance."
+                },
+                {
+                    question: "Which type of conflict supports the goals of the group and improves overall performance?",
+                    options: ["Dysfunctional conflict", "Functional conflict", "Relationship conflict", "Emotional conflict"],
+                    correct: 1,
+                    explanation: "Functional conflict is constructive; it fosters creativity, evaluation, and positive problem solving."
+                },
+                {
+                    question: "The process in which two or more parties exchange goods/services and attempt to agree upon the exchange rate is known as _______.",
+                    options: ["Arbitration", "Negotiation", "Mediation", "Collaboration"],
+                    correct: 1,
+                    explanation: "Negotiation is a formal bargaining process aimed at reaching a mutually acceptable agreement."
+                }
+            ]
+        ];
+
+        let userAnswers = [
+            Array(20).fill(null),
+            Array(20).fill(null),
+            Array(20).fill(null),
+            Array(20).fill(null)
+        ];
+
+        let currentSet = 0;
+        let currentQuestion = 0;
+
+        const setTitles = [
+            "Set 1: Foundational Concepts & Motivation",
+            "Set 2: Reinforcement, Perception & Anchors",
+            "Set 3: Personality, Perception & Communication",
+            "Set 4: Groups, Leadership & Organizational Dynamics"
+        ];
+
+        function initApp() {
+            renderQuestion();
+            updateMetrics();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        function switchSet(setIndex) {
+            currentSet = setIndex;
+            currentQuestion = 0;
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach((tab, index) => {
+                if (index === setIndex) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+
+            renderQuestion();
+            updateMetrics();
+        }
+
+        function renderQuestion() {
+            const qData = quizData[currentSet][currentQuestion];
+            const savedAnswer = userAnswers[currentSet][currentQuestion];
+
+            document.getElementById('set-title').innerText = setTitles[currentSet];
+            document.getElementById('question-counter').innerText = `Question ${currentQuestion + 1} / 20`;
+            
+            const progressPercent = ((currentQuestion + 1) / 20) * 100;
+            document.getElementById('top-progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('question-text').innerText = `${currentQuestion + 1}. ${qData.question}`;
+
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D'];
+
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.type = 'button';
+                
+                if (savedAnswer !== null) {
+                    btn.disabled = true;
+                    if (index === qData.correct) {
+                        btn.classList.add('correct');
+                    }
+                    if (savedAnswer === index && savedAnswer !== qData.correct) {
+                        btn.classList.add('incorrect');
+                    }
+                } else {
+                    btn.onclick = () => selectOption(index);
+                }
+
+                btn.innerHTML = `
+                    <span class="option-prefix">${prefixes[index]}</span>
+                    <span>${optText}</span>
+                `;
+                optionsGrid.appendChild(btn);
+            });
+
+            const expBox = document.getElementById('explanation-box');
+            if (savedAnswer !== null) {
+                expBox.style.display = 'block';
+                document.getElementById('explanation-text').innerText = qData.explanation;
+            } else {
+                expBox.style.display = 'none';
+            }
+
+            document.getElementById('btn-prev').disabled = (currentQuestion === 0);
+            
+            const nextBtn = document.getElementById('btn-next');
+            if (currentQuestion === 19) {
+                if (currentSet < 3) {
+                    nextBtn.innerText = "Next Set";
+                    nextBtn.disabled = false;
+                } else {
+                    nextBtn.innerText = "Finish Quiz";
+                    nextBtn.disabled = true;
+                }
+            } else {
+                nextBtn.innerText = "Next Question";
+                nextBtn.disabled = false;
+            }
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentSet][currentQuestion] = optionIndex;
+            renderQuestion();
+            updateMetrics();
+        }
+
+        function navigateQuestion(direction) {
+            if (direction === 1) {
+                if (currentQuestion < 19) {
+                    currentQuestion++;
+                    renderQuestion();
+                } else if (currentSet < 3) {
+                    switchSet(currentSet + 1);
+                }
+            } else if (direction === -1) {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    renderQuestion();
+                }
+            }
+        }
+
+        function resetCurrentSet() {
+            if (confirm(`Are you sure you want to reset all answers for ${setTitles[currentSet]}?`)) {
+                userAnswers[currentSet] = Array(20).fill(null);
+                currentQuestion = 0;
+                renderQuestion();
+                updateMetrics();
+            }
+        }
+
+        function updateMetrics() {
+            let totalAnswered = 0;
+            let totalCorrect = 0;
+            let setAnswered = 0;
+            let setCorrect = 0;
+
+            for (let s = 0; s < 4; s++) {
+                for (let q = 0; q < 20; q++) {
+                    const ans = userAnswers[s][q];
+                    if (ans !== null) {
+                        totalAnswered++;
+                        if (ans === quizData[s][q].correct) {
+                            totalCorrect++;
+                        }
+
+                        if (s === currentSet) {
+                            setAnswered++;
+                            if (ans === quizData[s][q].correct) {
+                                setCorrect++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('metric-progress').innerText = `${totalAnswered} / 80`;
+            const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+            document.getElementById('metric-accuracy').innerText = `${accuracy}%`;
+            document.getElementById('metric-set-score').innerText = `${setCorrect} / 20`;
+        }
+    </script>
+</body>
+</html>
