@@ -93,13 +93,27 @@
   }
 
   /* ---------- SECTIONS ---------- */
-  section {
+  /* section {
     height: 500px;
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('homepage3.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('homepage2.jpeg');
+    z-index: 1;
     width: auto;
     display: flex;
     align-items: center;
-  }
+    background-position: center;
+
+
+
+  } */
+
+
+  section {
+  min-height: 500px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
 
   .section-inner {
     max-width: 1100px;
@@ -113,7 +127,7 @@
   }
 
   /* Section 1 — Home */
-  #home {
+  /* #home {
     background: linear-gradient(rgba(0, 0, 0, 0.2) url('homepage-bg.jpg'));
     background-repeat: no-repeat;
     background-position: top center;
@@ -121,32 +135,43 @@
     margin: 0;
     background-size: cover;
 
-  }
+  } */
 
-  #home h1 {
-    font-size: 34px;
-    font-weight: 700;
-    color: var(--navy-black);
-    max-width: 480px;
-    letter-spacing: -0.01em;
-  }
+  /* Section 1 — Home */
+#home {
+  /* Layer 1 (Top): Dark overlay | Layer 2 (Bottom): Background image */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('homepage-bg4.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  margin: 0;
+}
 
-  #home p {
-    margin-top: 12px;
-    color: var(--ink-soft);
-    max-width: 420px;
-    font-size: 16px;
-  }
+#home h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffffff; /* White title for high contrast */
+  max-width: 750px;
+  letter-spacing: -0.01em;
+}
 
+#home p {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.85); /* Slightly transparent white paragraph */
+  max-width: 420px;
+  font-size:17px;
+}
   #home .eyebrow {
     display: inline-block;
-    font-size: 12px;
+    font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--blue);
     margin-bottom: 10px;
   }
+
 
   /* Section 2 — Quiz */
   #quiz {
@@ -155,9 +180,9 @@
   }
 
   #quiz h2 {
-    font-size: 28px;
+    font-size: 3rem;
     font-weight: 700;
-    max-width: 460px;
+    max-width: 500px;
   }
 
   #quiz p {
@@ -172,8 +197,8 @@
     background: var(--white);
     color: var(--blue-dark);
     font-weight: 600;
-    font-size: 15px;
-    padding: 14px 26px;
+    font-size: 2rem;
+    padding: 24px 64px;
     border-radius: 6px;
     text-decoration: none;
     white-space: nowrap;
