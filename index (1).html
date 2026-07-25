@@ -16,6 +16,7 @@
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#quiz">Quiz</a></li>
+    
       <li><a href="#support">Contact Support</a></li>
     </ul>
   </div>
@@ -25,12 +26,42 @@
   <div class="section-inner">
     <div>
       <span class="eyebrow">Quiz Up</span>
-      <h1>Test what you know. Discover what you don't.</h1>
-      <p>Bite-sized quizzes across science, history, and pop culture — built to make learning feel like a game.</p>
+      <h1>Learn Smarter.
+Practice Faster. Pass With Confidence.</h1>
+      <p>Prepare for your university examinations through interactive quizzes, course practice, and real-time progress tracking.</p>
+    <div class="hero-buttons">
+    <a href="courses.html" class="btn-primary">Start Quiz</a>
+
+    <a href="login.html" class="btn-secondary">Login</a>
+</div>
     </div>
+
   </div>
 </section>
 
+<section class="stats">
+
+<div class="stat-card">
+<h2>5000+</h2>
+<p>Students</p>
+</div>
+
+<div class="stat-card">
+<h2>120+</h2>
+<p>Courses</p>
+</div>
+
+<div class="stat-card">
+<h2>50K+</h2>
+<p>Quizzes Taken</p>
+</div>
+
+<div class="stat-card">
+<h2>98%</h2>
+<p>Success Rate</p>
+</div>
+
+</section>
 
 <section id="quiz">
   <div class="section-inner">
@@ -38,7 +69,7 @@
       <h2>Today's quiz is ready.</h2>
       <p>Ten questions, five minutes, one new topic every day. See how your score stacks up.</p>
     </div>
-    <a class="btn" href="https://example.com/quiz" target="_blank" rel="noopener">Take the quiz</a>
+    <a class="btn" href="courses.html" target="_blank" rel="noopener">Take the quiz</a>
   </div>
 </section>
 
@@ -64,6 +95,72 @@
     <a class="btn" href="mailto:support@quizup.example">Contact support</a>
   </div>
 </section>
+
+
+
+<!-- SITE FOOTER -->
+<footer id="siteFooter">
+  <div class="footer-container">
+    
+    <!-- Column 1: Brand & Bio -->
+    <div class="footer-col brand-col">
+      <span class="brand">Quiz&nbsp;Up</span>
+      <p class="brand-tagline">
+        Bite-sized quizzes across science, history, computing, and pop culture — built to make learning feel like a game.
+      </p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="GitHub">💻</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+      </div>
+    </div>
+
+    <!-- Column 2: Quick Links -->
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#quiz">Today's Quiz</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#support">Support</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 3: Courses Quick Access -->
+    <div class="footer-col">
+      <h4>Popular Topics</h4>
+      <ul class="footer-links">
+        <li><a href="#courses">Computing</a></li>
+        <li><a href="#courses">Organisational Behaviour</a></li>
+        <li><a href="#courses">Quantitative Methods</a></li>
+        <li><a href="#courses">Passco (Past Questions)</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 4: Newsletter -->
+    <div class="footer-col newsletter-col">
+      <h4>Stay Updated</h4>
+      <p>Get notified when new quizzes and courses drop.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn-sub">Join</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Bottom Legal / Copyright Bar -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p>&copy; 2026 Quiz Up. All rights reserved.</p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script>
   const nav = document.getElementById('siteNav');

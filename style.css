@@ -5,6 +5,7 @@
     --blue-dark: #1d4fc4;
     --navy-black: #0a1224;
     --ink: #101418;
+    
     --ink-soft: #4a5160;
     font-family: 'Inter', sans-serif;
   }
@@ -28,7 +29,7 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: var(--white);
+    background: var(--blue-dark);
     border-bottom: 1px solid rgba(10,18,36,0.08);
     transition: padding 0.25s ease, box-shadow 0.25s ease;
   }
@@ -46,7 +47,7 @@
   .brand {
     font-size: 20px;
     font-weight: 700;
-    color: var(--navy-black);
+    color: var(--white);
     letter-spacing: -0.01em;
   }
 
@@ -61,7 +62,7 @@
 
   .nav-links a {
     text-decoration: none;
-    color: var(--ink);
+    color: var(--white);
     padding-bottom: 2px;
     border-bottom: 2px solid transparent;
     transition: border-color 0.2s ease, color 0.2s ease;
@@ -159,7 +160,7 @@
 #home p {
   margin-top: 12px;
   color: rgba(255, 255, 255, 0.85); /* Slightly transparent white paragraph */
-  max-width: 420px;
+  max-width: 550px;
   font-size:17px;
 }
   #home .eyebrow {
@@ -171,6 +172,112 @@
     color: var(--blue);
     margin-bottom: 10px;
   }
+
+
+  .hero-buttons{
+    display:flex;
+    gap:20px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.btn-primary{
+    background:#2f6fed;
+    color:white;
+    padding:14px 30px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-primary:hover{
+    background:#1d4fc4;
+    transform:translateY(-4px);
+}
+
+.btn-secondary{
+    border:2px solid white;
+    color:white;
+    padding:14px 30px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-secondary:hover{
+    background:white;
+    color:#2f6fed;
+}
+
+/* stats Section  */
+
+.stats{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:20px;
+
+padding:70px 10%;
+
+background:#f8f9fc;
+
+}
+
+.stat-card{
+
+background:white;
+
+padding:30px;
+
+text-align:center;
+
+border-radius:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+transition:.3s;
+
+}
+
+.stat-card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.stat-card h2{
+
+color:#2f6fed;
+
+font-size:2rem;
+
+}
+
+.stat-card p{
+
+margin-top:10px;
+
+}
+
+.stat-card,
+.step{
+
+transition:.4s;
+
+}
+
+.stat-card:hover,
+.step:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 20px 40px rgba(0,0,0,.15);
+
+}
 
 
   /* Section 2 — Quiz */
@@ -279,6 +386,176 @@
     background: rgba(255,255,255,0.08);
     box-shadow: none;
   }
+
+
+
+  /* ---------- FOOTER ---------- */
+#siteFooter {
+  background: var(--navy-black); /* Uses existing dark navy variable */
+  color: var(--white);
+  padding-top: 64px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 48px 24px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 40px;
+}
+
+.footer-col h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--white);
+}
+
+.brand-col .brand {
+  color: var(--white);
+  font-size: 22px;
+}
+
+.brand-tagline {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.footer-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.footer-socials a:hover {
+  background: var(--blue);
+  transform: translateY(-2px);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--blue);
+}
+
+.newsletter-col p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 8px;
+}
+
+.newsletter-form input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  font-size: 14px;
+  outline: none;
+}
+
+.newsletter-form input:focus {
+  border-color: var(--blue);
+}
+
+.btn-sub {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-sub:hover {
+  background: var(--blue-dark);
+}
+
+/* Footer Bottom Bar */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.footer-bottom-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.legal-links {
+  display: flex;
+  gap: 20px;
+}
+
+.legal-links a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legal-links a:hover {
+  color: var(--white);
+}
+
+/* Responsive Footer Layout for Mobile */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footer-bottom-inner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 720px) {

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses- QuizUp</title>
+  <link rel="stylesheet" href="Course.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- NAV BAR (reused from homepage layout) -->
+<nav id="siteNav">
+  <div class="nav-inner">
+    <span class="brand">Quiz&nbsp;Up</span>
+    <ul class="nav-links">
+      <li><a href="index (1).html">Home</a></li>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#support">Contact Support</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- COURSES SECTION -->
+<section id="courses">
+  <div class="courses-container">
+    
+    <!-- Header -->
+    <div class="courses-header">
+      <span class="eyebrow">Explore Topics</span>
+      <h2>Master Your Modules</h2>
+      <p>Select a subject to access quizzes, practice questions, and study materials.</p>
+    </div>
+
+    <!-- Interactive Grid -->
+    <div class="courses-grid">
+      
+      <!-- Card 1: Computing -->
+      <div class="course-card">
+        <div class="card-icon">💻</div>
+        <div class="card-content">
+          <h3>Computing</h3>
+          <p>Fundamentals of computer science, algorithms, software design, and digital systems.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge active">12 Quizzes</span>
+          <a href="computing.html" class="course-link">Start Quiz &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 2: Organisational Behaviour -->
+      <div class="course-card">
+        <div class="card-icon">👥</div>
+        <div class="card-content">
+          <h3>Organisational Behaviour</h3>
+          <p>Understand workplace dynamics, leadership styles, communication, and team structures.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge active">8 Quizzes</span>
+          <a href="organisational behaviour .html" class="course-link">Start Quiz &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 3: Quantitative Methods -->
+      <div class="course-card">
+        <div class="card-icon">📊</div>
+        <div class="card-content">
+          <h3>Quantitative Methods</h3>
+          <p>Statistical techniques, business mathematics, and data analysis for decision-making.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge active">15 Quizzes</span>
+          <a href="Quantity method.html" class="course-link">Start Quiz &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 4: Passco -->
+      <div class="course-card highlight">
+        <div class="card-icon">📚</div>
+        <div class="card-content">
+          <h3>Passco (Past Questions)</h3>
+          <p>Curated past examination questions with detailed step-by-step solutions and answers.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge active-gold">Popular</span>
+          <a href="passco.html" class="course-link">Practice Now &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 5: Coming Soon - Cyber Security -->
+      <div class="course-card coming-soon">
+        <div class="card-icon">🛡️</div>
+        <div class="card-content">
+          <h3>Cyber Security</h3>
+          <p>Network security principles, threat analysis, and ethical hacking essentials.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge soon">Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Card 6: Coming Soon - Macroeconomics -->
+      <div class="course-card coming-soon">
+        <div class="card-icon">📈</div>
+        <div class="card-content">
+          <h3>Macroeconomics</h3>
+          <p>Global economic systems, inflation dynamics, monetary policy, and fiscal theories.</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge soon">Coming Soon</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SITE FOOTER -->
+<footer id="siteFooter">
+  <div class="footer-container">
+    
+    <!-- Column 1: Brand & Bio -->
+    <div class="footer-col brand-col">
+      <span class="brand">Quiz&nbsp;Up</span>
+      <p class="brand-tagline">
+        Bite-sized quizzes across science, history, computing, and pop culture — built to make learning feel like a game.
+      </p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="GitHub">💻</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+      </div>
+    </div>
+
+    <!-- Column 2: Quick Links -->
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#quiz">Today's Quiz</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#support">Support</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 3: Courses Quick Access -->
+    <div class="footer-col">
+      <h4>Popular Topics</h4>
+      <ul class="footer-links">
+        <li><a href="#courses">Computing</a></li>
+        <li><a href="#courses">Organisational Behaviour</a></li>
+        <li><a href="#courses">Quantitative Methods</a></li>
+        <li><a href="#courses">Passco (Past Questions)</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 4: Newsletter -->
+    <div class="footer-col newsletter-col">
+      <h4>Stay Updated</h4>
+      <p>Get notified when new quizzes and courses drop.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn-sub">Join</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Bottom Legal / Copyright Bar -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p>&copy; 2026 Quiz Up. All rights reserved.</p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
