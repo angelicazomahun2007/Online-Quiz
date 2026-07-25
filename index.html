@@ -7,17 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
 
 <nav id="siteNav">
   <div class="nav-inner">
     <span class="brand">Quiz&nbsp;Up</span>
-    <ul class="nav-links">
-      <li><a href="#h">Home</a></li>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
       <li><a href="#quiz">Quiz</a></li>
-    
+      <li><a href="#about">About</a></li>
       <li><a href="#support">Contact Support</a></li>
     </ul>
   </div>
@@ -27,41 +30,33 @@
   <div class="section-inner">
     <div>
       <span class="eyebrow">Quiz Up</span>
-      <h1>Learn Smarter.
-Practice Faster. Pass With Confidence.</h1>
+      <h1>Learn Smarter. Practice Faster. Pass With Confidence.</h1>
       <p>Prepare for your university examinations through interactive quizzes, course practice, and real-time progress tracking.</p>
-    <div class="hero-buttons">
-    <a href="courses.html" class="btn-primary">Start Quiz</a>
-
-    <a href="login.html" class="btn-secondary">Login</a>
-</div>
+      <div class="hero-buttons">
+        <a href="courses.html" class="btn-primary">Start Quiz</a>
+        <a href="login.html" class="btn-secondary">Login</a>
+      </div>
     </div>
-
   </div>
 </section>
 
 <section class="stats">
-
-<div class="stat-card">
-<h2>5000+</h2>
-<p>Students</p>
-</div>
-
-<div class="stat-card">
-<h2>120+</h2>
-<p>Courses</p>
-</div>
-
-<div class="stat-card">
-<h2>50K+</h2>
-<p>Quizzes Taken</p>
-</div>
-
-<div class="stat-card">
-<h2>98%</h2>
-<p>Success Rate</p>
-</div>
-
+  <div class="stat-card">
+    <h2>5000+</h2>
+    <p>Students</p>
+  </div>
+  <div class="stat-card">
+    <h2>120+</h2>
+    <p>Courses</p>
+  </div>
+  <div class="stat-card">
+    <h2>50K+</h2>
+    <p>Quizzes Taken</p>
+  </div>
+  <div class="stat-card">
+    <h2>98%</h2>
+    <p>Success Rate</p>
+  </div>
 </section>
 
 <section id="quiz">
@@ -75,122 +70,77 @@ Practice Faster. Pass With Confidence.</h1>
 </section>
 
 <section id="about">
-
-    <div class="section-inner">
-
-        <!-- Left Side -->
-        <div class="about-content">
-
-            <span class="about-tag">
-                ABOUT QUIZ UP
-            </span>
-
-            <h2>Learning That Sticks.</h2>
-
-            <p>
-                Quiz Up is designed to help university students prepare for
-                quizzes, assignments and examinations through interactive
-                learning experiences. Practice at your own pace, improve
-                your understanding, and build confidence before every exam.
-            </p>
-
-            <a href="courses.html" class="about-btn">
-                Explore Courses →
-            </a>
-
-        </div>
-
-        <!-- Right Side -->
-        <div class="about-features">
-
-            <div class="feature-card">
-
-                <div class="feature-icon">📚</div>
-
-                <h3>Course-Based Quizzes</h3>
-
-                <p>
-                    Practice quizzes organised according to your university courses.
-                </p>
-
-            </div>
-
-            <div class="feature-card">
-
-                <div class="feature-icon">⚡</div>
-
-                <h3>Instant Results</h3>
-
-                <p>
-                    Receive immediate scores and feedback after every quiz.
-                </p>
-
-            </div>
-
-            <div class="feature-card">
-
-                <div class="feature-icon">📈</div>
-
-                <h3>Track Progress</h3>
-
-                <p>
-                    Monitor your performance and improve over time.
-                </p>
-
-            </div>
-
-            <div class="feature-card">
-
-                <div class="feature-icon">🎯</div>
-
-                <h3>Practice Anytime</h3>
-
-                <p>
-                    Access quizzes wherever and whenever you want.
-                </p>
-
-            </div>
-
-        </div>
-
+  <div class="section-inner">
+    <!-- Left Side -->
+    <div class="about-content">
+      <span class="about-tag">ABOUT QUIZ UP</span>
+      <h2>Learning That Sticks.</h2>
+      <p>
+        Quiz Up is designed to help university students prepare for
+        quizzes, assignments and examinations through interactive
+        learning experiences. Practice at your own pace, improve
+        your understanding, and build confidence before every exam.
+      </p>
+      <a href="courses.html" class="about-btn">Explore Courses &rarr;</a>
     </div>
 
+    <!-- Right Side -->
+    <div class="about-features">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Course-Based Quizzes</h3>
+        <p>Practice quizzes organised according to your university courses.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Receive immediate scores and feedback after every quiz.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Track Progress</h3>
+        <p>Monitor your performance and improve over time.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Practice Anytime</h3>
+        <p>Access quizzes wherever and whenever you want.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section id="support">
-    <div class="section-inner">
-
-        <div class="support-text">
-            <h2>Need Help?</h2>
-            <p>
-                Our support team is available to help you with login issues,
-                quiz access, payment questions, and technical support.
-            </p>
-        </div>
-
-        <div class="support-cards">
-
-            <div class="support-card">
-                <h3>📧 Email</h3>
-                <p>support@quizup.com</p>
-            </div>
-
-            <div class="support-card">
-                <h3>📱 WhatsApp</h3>
-                <p>+233 XX XXX XXXX</p>
-            </div>
-
-            <div class="support-card">
-                <h3>⏰ Support Hours</h3>
-                <p>Mon - Fri<br>8:00 AM - 6:00 PM</p>
-            </div>
-
-        </div>
-
+  <div class="section-inner">
+    <div class="support-text">
+      <h2>Need Help?</h2>
+      <p>
+        Our support team is available to help you with login issues,
+        quiz access, payment questions, and technical support.
+      </p>
     </div>
+
+    <div class="support-cards">
+      <div class="support-card">
+        <h3>📧 Email</h3>
+        <p>support@quizup.com</p>
+      </div>
+
+      <div class="support-card">
+        <h3>📱 WhatsApp</h3>
+        <p>+233 XX XXX XXXX</p>
+      </div>
+
+      <div class="support-card">
+        <h3>⏰ Support Hours</h3>
+        <p>Mon - Fri<br>8:00 AM - 6:00 PM</p>
+      </div>
+    </div>
+  </div>
 </section>
-
-
 
 <!-- SITE FOOTER -->
 <footer id="siteFooter">
@@ -257,6 +207,7 @@ Practice Faster. Pass With Confidence.</h1>
 </footer>
 
 <script>
+  // Nav Scroll State
   const nav = document.getElementById('siteNav');
   const SCROLL_THRESHOLD = 40;
 
@@ -270,6 +221,29 @@ Practice Faster. Pass With Confidence.</h1>
 
   window.addEventListener('scroll', updateNav, { passive: true });
   updateNav();
+
+  // Mobile Menu Toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    const icon = navToggle.querySelector('i');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-xmark');
+  });
+
+  // Close menu on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      const icon = navToggle.querySelector('i');
+      if (icon) {
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-xmark');
+      }
+    });
+  });
 </script>
 
 </body>
